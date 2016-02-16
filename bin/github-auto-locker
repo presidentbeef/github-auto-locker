@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+require_relative '../lib/locker'
+
+abort "Usage: auto-lock [user] [repo] [token]" unless ARGV[2]
+
+Locker.new(ARGV[0], ARGV[1], ARGV[2]).lock
