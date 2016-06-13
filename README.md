@@ -8,8 +8,15 @@ By default it locks closed issues that are over 120 days old.
 
 This requires Ruby.
 
+From source:
+
 * Clone or download repo
 * Run `./bin/github-auto-locker USER REPO TOKEN [age in days]`
+
+As a gem:
+
+* Run `gem install github-auto-locker`
+* Run `github-auto-locker USER REPO TOKEN [age in days]`
 
 The age is optional.
 
