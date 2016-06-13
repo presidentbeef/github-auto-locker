@@ -2,12 +2,16 @@
 
 Automatically locks old GitHub issues that have already been closed.
 
+By default it locks closed issues that are over 120 days old.
+
 ### Usage
 
 This requires Ruby.
 
 * Clone or download repo
-* Run `./bin/github-auto-locker USER REPO TOKEN`
+* Run `./bin/github-auto-locker USER REPO TOKEN [age in days]`
+
+The age is optional.
 
 `TOKEN` is a personal access token from [here](https://github.com/settings/tokens). It will require the 'repo' scope.
 
