@@ -91,8 +91,7 @@ class Locker
         number = issue['number']
         locking number, i, total
 
-        # TODO magic numbers are bad. Use URI.split or a const or something
-        path = issue["url"][22..-1] # pull path from full URL
+        _, _, _, _, _, path, * = URI.split issue["url"]
         response = http.put("#{path}/lock", '', headers)
 
         if response.code == "204" # 204 means it worked, apparently
