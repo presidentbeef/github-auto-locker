@@ -4,6 +4,16 @@ require_relative '../lib/locker'
 noop = ARGV.delete "-n"
 user, repo, token, days = ARGV
 
+unless token then
+  hub_config = File.expand_path "~/.config/hub"
+
+  if File.file? hub_config then
+    require "yaml"
+    config = YAML.load File.read hub_config
+    token  = config.dig("github.com", 0, "oauth_token")
+  end
+end
+
 abort "Usage: auto-lock [user] [repo] [token] [days]" unless user && repo && token
 
 Locker.new(user, repo, token, days || 120, noop).lock
