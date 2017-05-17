@@ -38,6 +38,11 @@ class Locker
 
       resp = http.get(path)
       new_issues = JSON.parse(resp.body)
+
+      unless Array === new_issues then
+        abort "bad response: %p" % new_issues
+      end
+
       issues += new_issues
 
       # Pagination
