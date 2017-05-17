@@ -2,7 +2,8 @@
 require_relative '../lib/locker'
 
 noop = ARGV.delete "-n"
+user, repo, token, days = ARGV
 
-abort "Usage: auto-lock [user] [repo] [token] [days]" unless ARGV[2]
+abort "Usage: auto-lock [user] [repo] [token] [days]" unless user && repo && token
 
-Locker.new(ARGV[0], ARGV[1], ARGV[2], ARGV[3] || 120, noop).lock
+Locker.new(user, repo, token, days || 120, noop).lock
