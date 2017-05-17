@@ -5,15 +5,17 @@ require 'base64'
 
 # Automatically locks old issues that have been closed already
 class Locker
-  def initialize user, repo, token, old_days = 120
+  def initialize user, repo, token, old_days = 120, noop = false
     @user = user
     @repo = repo
     @token = token
     @old_days = old_days
+    @noop = noop
   end
 
   # Locks old closed issues
   def lock
+    notify "Not locking anything due to -n flag" if @noop
     notify "Getting closed issues..."
     issues = get_closed_issues
 
@@ -22,6 +24,19 @@ class Locker
     else
       notify "Received #{issues.length} issues"
       notify "Locking old closed issues..."
+
+      if @noop then
+        total = issues.size
+
+        issues.each_with_index do |issue, i|
+          number = issue['number']
+          locking number, i, total
+          puts issue['title']
+        end
+
+        return
+      end
+
       lock_old_closed_issues issues
     end
   end
