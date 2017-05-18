@@ -9,7 +9,7 @@ class Locker
     @user = user
     @repo = repo
     @token = token
-    @old_days = old_days
+    @old_days = old_days.to_i
     @noop = noop
   end
 
