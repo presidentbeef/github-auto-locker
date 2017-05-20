@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = %q{github-auto-locker}
-  s.version = "1.1.0"
+  s.version = "1.1.1"
   s.authors = ["Justin Collins"]
   s.summary = "Simple script to lock closed GitHub issues over a certain age."
   s.description = <<DESC
