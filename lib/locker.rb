@@ -44,14 +44,16 @@ class Locker
   # Fetches all closed, unlocked issues closed before cutoff date
   def get_closed_issues
     issues = []
-    path = "/repos/#@user/#@repo/issues?state=closed&access_token=#@token&sort=updated&direction=asc"
+    path = "/repos/#@user/#@repo/issues?state=closed&sort=updated&direction=asc"
     page = 1
+    headers = {'Authorization' => "Basic #{Base64.strict_encode64("#@user:#@token")}"}
+
     http = Net::HTTP.start("api.github.com", 443, nil, nil, nil, nil, use_ssl: true)
 
     loop do
       notify "Retrieving page #{page}..."
 
-      resp = http.get(path)
+      resp = http.get(path, headers)
       new_issues = JSON.parse(resp.body)
 
       unless Array === new_issues then
