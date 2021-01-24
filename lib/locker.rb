@@ -5,12 +5,13 @@ require 'base64'
 
 # Automatically locks old issues that have been closed already
 class Locker
-  def initialize user, repo, token, old_days = 120, noop = false
+  def initialize user, repo, token, old_days = 120, noop = false, level = 2
     @user = user
     @repo = repo
     @token = token
     @old_days = old_days.to_i
     @noop = noop
+    @level = level || 0
   end
 
   # Locks old closed issues
@@ -107,6 +108,7 @@ class Locker
 
   # Print locking message
   def locking number, item, total
+    return unless @level >= 1
     print "[INFO] Locking #{number} (#{item + 1}/#{total})..."
   end
 
@@ -117,6 +119,7 @@ class Locker
 
   # Print INFO message
   def notify message
+    return unless @level >= 2
     puts "[INFO] #{message}"
   end
 
