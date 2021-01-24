@@ -16,7 +16,7 @@ class Locker
   # Locks old closed issues
   def lock
     notify "Not locking anything due to -n flag" if @noop
-    notify "Getting closed issues..."
+    notify "Getting closed issues for %s/%s..." % [@user, @repo]
     issues = get_closed_issues
 
     if issues.empty?
@@ -28,7 +28,7 @@ class Locker
       if @noop then
         total = issues.size
 
-        issues.each_with_index do |issue, i|
+        issues.sort_by { |h| h["number"] }.each_with_index do |issue, i|
           number = issue['number']
           locking number, i, total
           puts issue['title']
@@ -125,4 +125,3 @@ class Locker
     warn "[ERROR] #{message}"
   end
 end
-
