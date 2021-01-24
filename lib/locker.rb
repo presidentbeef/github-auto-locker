@@ -44,7 +44,7 @@ class Locker
   # Fetches all closed, unlocked issues closed before cutoff date
   def get_closed_issues
     issues = []
-    path = "/repos/#@user/#@repo/issues?state=closed&access_token=#@token&sort=updated&direction=asc"
+    path = "/repos/#@user/#@repo/issues?state=closed&per_page=100&access_token=#@token&sort=updated&direction=asc"
     page = 1
     http = Net::HTTP.start("api.github.com", 443, nil, nil, nil, nil, use_ssl: true)
 
@@ -63,7 +63,7 @@ class Locker
       # Pagination
       if resp['Link'] and resp['Link'].match(/<https:\/\/api\.github\.com(\/[^>]+)>; rel="next",/)
         path = $1
-        page = path.match(/page=(\d+)/)[1]
+        page = path.match(/&page=(\d+)/)[1]
       else
         http.finish
         break
