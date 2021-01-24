@@ -82,7 +82,9 @@ class Locker
   def lock_old_closed_issues issues
     headers = {'Accept' => 'application/vnd.github.the-key-preview+json', # required for new lock API
                'Content-Length' => '0', # required for PUT with no body
-               'Authorization' => "Basic #{Base64.strict_encode64("#@user:#@token")}"}
+               'Authorization' => "Basic #{Base64.strict_encode64("#@user:#@token")}",
+               'Content-Type' => "application/x-www-form-urlencoded",
+              }
 
     Net::HTTP.start("api.github.com", 443, nil, nil, nil, nil, use_ssl: true) do |http|
       total = issues.length
