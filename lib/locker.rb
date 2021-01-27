@@ -5,18 +5,19 @@ require 'base64'
 
 # Automatically locks old issues that have been closed already
 class Locker
-  def initialize user, repo, token, old_days = 120, noop = false
+  def initialize user, repo, token, old_days = 120, noop = false, level = 2
     @user = user
     @repo = repo
     @token = token
     @old_days = old_days.to_i
     @noop = noop
+    @level = level || 0
   end
 
   # Locks old closed issues
   def lock
     notify "Not locking anything due to -n flag" if @noop
-    notify "Getting closed issues..."
+    notify "Getting closed issues for %s/%s..." % [@user, @repo]
     issues = get_closed_issues
 
     if issues.empty?
@@ -28,7 +29,7 @@ class Locker
       if @noop then
         total = issues.size
 
-        issues.each_with_index do |issue, i|
+        issues.sort_by { |h| h["number"] }.each_with_index do |issue, i|
           number = issue['number']
           locking number, i, total
           puts issue['title']
@@ -44,7 +45,7 @@ class Locker
   # Fetches all closed, unlocked issues closed before cutoff date
   def get_closed_issues
     issues = []
-    path = "/repos/#@user/#@repo/issues?state=closed&access_token=#@token&sort=updated&direction=asc"
+    path = "/repos/#@user/#@repo/issues?state=closed&per_page=100&access_token=#@token&sort=updated&direction=asc"
     page = 1
     http = Net::HTTP.start("api.github.com", 443, nil, nil, nil, nil, use_ssl: true)
 
@@ -61,9 +62,9 @@ class Locker
       issues += new_issues
 
       # Pagination
-      if resp['Link'] and resp['Link'].match /<https:\/\/api\.github\.com(\/[^>]+)>; rel="next",/
+      if resp['Link'] and resp['Link'].match(/<https:\/\/api\.github\.com(\/[^>]+)>; rel="next",/)
         path = $1
-        page = path.match(/page=(\d+)/)[1]
+        page = path.match(/&page=(\d+)/)[1]
       else
         http.finish
         break
@@ -82,7 +83,9 @@ class Locker
   def lock_old_closed_issues issues
     headers = {'Accept' => 'application/vnd.github.the-key-preview+json', # required for new lock API
                'Content-Length' => '0', # required for PUT with no body
-               'Authorization' => "Basic #{Base64.strict_encode64("#@user:#@token")}"}
+               'Authorization' => "Basic #{Base64.strict_encode64("#@user:#@token")}",
+               'Content-Type' => "application/x-www-form-urlencoded",
+              }
 
     Net::HTTP.start("api.github.com", 443, nil, nil, nil, nil, use_ssl: true) do |http|
       total = issues.length
@@ -105,6 +108,7 @@ class Locker
 
   # Print locking message
   def locking number, item, total
+    return unless @level >= 1
     print "[INFO] Locking #{number} (#{item + 1}/#{total})..."
   end
 
@@ -115,6 +119,7 @@ class Locker
 
   # Print INFO message
   def notify message
+    return unless @level >= 2
     puts "[INFO] #{message}"
   end
 
@@ -123,4 +128,3 @@ class Locker
     warn "[ERROR] #{message}"
   end
 end
-

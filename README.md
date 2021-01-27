@@ -11,12 +11,12 @@ This requires Ruby.
 From source:
 
 * Clone or download repo
-* Run `./bin/github-auto-locker USER REPO TOKEN [age in days] [-n]`
+* Run `./bin/github-auto-locker USER_OR_ORG REPO TOKEN [age in days] [-n]`
 
 As a gem:
 
 * Run `gem install github-auto-locker`
-* Run `github-auto-locker USER REPO TOKEN [age in days]`[-n]
+* Run `github-auto-locker USER_OR_ORG REPO TOKEN [age in days]`[-n]
 
 The age is optional.
 
