@@ -47,7 +47,11 @@ class Locker
     issues = []
     path = "/repos/#@user/#@repo/issues?state=closed&per_page=100&sort=updated&direction=asc"
     page = 1
-    headers = {'Authorization' => "Bearer #@token"}
+    headers = {
+      'Authorization' => "Bearer #@token",
+      'Accept' => 'application/vnd.github+json',
+      'X-GitHub-Api-Version' => '2022-11-28'
+    }
 
     http = Net::HTTP.start("api.github.com", 443, nil, nil, nil, nil, use_ssl: true)
 
