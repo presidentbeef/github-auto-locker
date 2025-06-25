@@ -87,10 +87,11 @@ class Locker
 
   # Expects array of issues from API call
   def lock_old_closed_issues issues
-    headers = {'Accept' => 'application/vnd.github.the-key-preview+json', # required for new lock API
+    headers = {'Accept' => 'application/vnd.github+json',
                'Content-Length' => '0', # required for PUT with no body
                'Authorization' => "Bearer #@token",
-               'Content-Type' => "application/x-www-form-urlencoded",
+               'X-GitHub-Api-Version' => '2022-11-28',
+               'Content-Type' => 'application/json',
               }
 
     Net::HTTP.start("api.github.com", 443, nil, nil, nil, nil, use_ssl: true) do |http|
@@ -101,7 +102,7 @@ class Locker
         locking number, i, total
 
         _, _, _, _, _, path, * = URI.split issue["url"]
-        response = http.put("#{path}/lock", '', headers)
+        response = http.put("#{path}/lock", '{"lock_reason":"off-topic"}', headers)
 
         if response.code == "204" # 204 means it worked, apparently
           locked
