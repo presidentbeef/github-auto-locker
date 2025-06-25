@@ -47,7 +47,7 @@ class Locker
     issues = []
     path = "/repos/#@user/#@repo/issues?state=closed&per_page=100&sort=updated&direction=asc"
     page = 1
-    headers = {'Authorization' => "Basic #{Base64.strict_encode64("#@user:#@token")}"}
+    headers = {'Authorization' => "Bearer #@token"}
 
     http = Net::HTTP.start("api.github.com", 443, nil, nil, nil, nil, use_ssl: true)
 
@@ -85,7 +85,7 @@ class Locker
   def lock_old_closed_issues issues
     headers = {'Accept' => 'application/vnd.github.the-key-preview+json', # required for new lock API
                'Content-Length' => '0', # required for PUT with no body
-               'Authorization' => "Basic #{Base64.strict_encode64("#@user:#@token")}",
+               'Authorization' => "Bearer #@token",
                'Content-Type' => "application/x-www-form-urlencoded",
               }
 
