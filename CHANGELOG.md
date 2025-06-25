@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.2.0 - 2025-06-25
+
+### Fixed
+
+- Authorization uses Bearer instead of Basic
+- Fixed pagination
+- Added reason for locking ('resolved')
+
+
 ## 1.1.1 - 2017-05-17
 
 ### Added
