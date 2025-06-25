@@ -64,7 +64,7 @@ class Locker
       issues += new_issues
 
       # Pagination
-      if resp['Link'] and resp['Link'].match(/<https:\/\/api\.github\.com(\/[^>]+)>; rel="next",/)
+      if resp['Link'] and resp['Link'].match(/<https:\/\/api\.github\.com(\/[^>]+)>; rel="next"/)
         path = $1
         page = path.match(/&page=(\d+)/)[1]
       else
